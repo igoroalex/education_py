@@ -9,11 +9,26 @@
 
 
 def translator(text: str) -> str:
-    return ""
+    twoface = "двуликий"
+    len_bin = len(twoface)
+    word_in_twoface = list()
+    for letter in text:
+        # translation taking into account Cyrillic [-len_bin::]
+        letter_in_bin = bin(ord(letter))[2::].zfill(len_bin)[-len_bin::]
+        letter_in_twoface = "".join(
+            [
+                twoface[i].upper() if letter_in_bin[i] == "1" else twoface[i]
+                for i in range(len_bin)
+            ]
+        )
+        word_in_twoface.append(letter_in_twoface)
+    return " ".join(word_in_twoface)
 
 
-print(translator("Hi"))
-print(translator("123"))
+assert translator("Hi") == "дВулИкий дВУлИкиЙ"
+assert translator("123") == "двУЛикиЙ двУЛикИй двУЛикИЙ"
+assert translator("Привет") == "двуЛИКИЙ дВуликий двУЛИкий двУЛикИй двУЛиКиЙ дВуликИй"
 
-# assert translator("Hi") == "дВулИкий дВУлИкиЙ"
-# assert translator("123") == "двУЛикиЙ двУЛикИй двУЛикИЙ"
+# print(translator("Hi"))
+# print(translator("123"))
+# print(translator("Привет"))
